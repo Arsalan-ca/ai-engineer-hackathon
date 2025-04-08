@@ -39,7 +39,7 @@ export default function UserInformation({onOpen, candidateData}: UserInfoProps) 
     <div className="bg-white p-6 text-black">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {candidateData.map((candidate, index) => (
-            <div key={index} className="bg-white rounded-lg shadow-md p-6 w-full text-md">
+            <div key={index} className="bg-white rounded-lg shadow-md p-6 w-full text-md hover:scale-103 hover:shadow-lg">
                 <div className="flex items-center justify-between">
                     <img 
                         src={candidate.profile_img ?? undefined} 
@@ -62,7 +62,7 @@ export default function UserInformation({onOpen, candidateData}: UserInfoProps) 
                 <div className="mt-4">
                     <p className="text-gray-600">{candidate.description}</p>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex">
                     <div className="mt-4 flex-grow basis-0 min-w-0">
                         <h3 className="font-semibold">Expert in</h3>
                         <div className="flex flex-wrap mt-2 text-blue-700">
@@ -76,7 +76,7 @@ export default function UserInformation({onOpen, candidateData}: UserInfoProps) 
                             ))}
                         </div>
                     </div>
-                    <div className="mt-4 flex-grow basis-0 min-w-0 text-right">
+                    <div className="mt-4 flex-grow basis-0 min-w-0 text-right top-0">
                         <h3 className="font-semibold">Commitment</h3>
                         <div className="flex flex-row justify-end mt-2 ">
                             {typeof candidate.commitment == 'string' && candidate.commitment.split(',').map((skill: string, i: number) => (

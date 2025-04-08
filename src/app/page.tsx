@@ -61,13 +61,14 @@ export default function Home() {
 }, []); 
   
   const handleProfileClick = (candidate: UserInfo) => {
-    setIsSelected(candidate)
-    setIsOpen(true)  
+    setIsSelected(candidate);
+    setIsOpen(true);
   };
 
   const handleCloseClick = () => {
     setIsOpen(false)
   };
+
 
 
   const sendQuerySearch = async (query: string) => {
