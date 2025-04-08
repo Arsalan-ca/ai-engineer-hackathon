@@ -13,21 +13,23 @@ type UserInfo = {
     id: string,
     name: string,
     years_of_experience: number,
-    experience: string | null,
+    experience: ExperienceItem[] | null,
     location: string | null,
     keywords: string | null,
     commitment: string | null,
     description: string | null,
     companies: string | null,
-    job_titles: string | null
+    job_titles: string | null,
+    profile_img: string | null
 };
 
-// const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-// const SERVICE_ROLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-// if (!SUPABASE_URL || !SERVICE_ROLE_KEY){
-//     throw new Error('Missing Supabase environment variables.');
-// }
-// const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+type ExperienceItem = {
+    title: string | null,
+    company: string | null,
+    end_date: string | null,
+    start_date: string  | null,
+    accomplishments: string[] | null,
+  };
 
 
 export default function UserInformation({onOpen}: UserInfoProps) {
@@ -49,7 +51,6 @@ export default function UserInformation({onOpen}: UserInfoProps) {
         fetchCandidate();
     }, []); 
 
-    console.log('!data ', candidateData);
 
 
     return (
@@ -59,7 +60,7 @@ export default function UserInformation({onOpen}: UserInfoProps) {
             <div key={index} className="bg-white rounded-lg shadow-md p-6 w-full text-md">
                 <div className="flex items-center justify-between">
                     <img 
-                        src={"./favicon.ico"} 
+                        src={candidate.profile_img ?? undefined} 
                         alt="" 
                         className="w-16 h-16 rounded-full mr-4"
                     />
@@ -110,41 +111,5 @@ export default function UserInformation({onOpen}: UserInfoProps) {
         ))}
     </div>
 </div>
-
-    );
+);
 }
-
-
-
-
-
-{/* <div class="bg-white rounded-lg shadow-md p-6 max-w-lg w-full">
-    <div class="flex items-center">
-        <img src="https://placehold.co/60x60" alt="Profile picture of V. D." class="w-16 h-16 rounded-full mr-4">
-        <div>
-            <h2 class="text-xl font-semibold">V. D. | Exp: 6 years</h2>
-            <p class="text-gray-600">Led Anduril's software platform development with deployment in active war zones.</p>
-        </div>
-        <button class="ml-auto bg-purple-500 text-white px-4 py-2 rounded-lg">View profile</button>
-    </div>
-    <div class="mt-4">
-        <h3 class="font-semibold">Expert in</h3>
-        <div class="flex flex-wrap mt-2">
-            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm mr-2 mb-2">Python</span>
-            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm mr-2 mb-2">Pytorch</span>
-            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm mr-2 mb-2">Docker</span>
-            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm mr-2 mb-2">C++</span>
-            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm mr-2 mb-2">SQL</span>
-        </div>
-    </div>
-    <div class="mt-4">
-        <h3 class="font-semibold">Commitment</h3>
-        <div class="flex flex-wrap mt-2">
-            <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm mr-2 mb-2">Full-time</span>
-            <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm mr-2 mb-2">Part-time</span>
-        </div>
-    </div>
-</div> */}
-
-
-

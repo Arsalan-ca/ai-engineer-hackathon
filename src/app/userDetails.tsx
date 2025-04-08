@@ -4,14 +4,29 @@ type UserInfo = {
   id: string,
   name: string,
   years_of_experience: number,
-  experience: string | null,
+  experience: ExperienceItem[] | null,
   location: string | null,
   keywords: string | null,
   commitment: string | null,
   description: string | null,
   companies: string | null,
-  job_titles: string | null
+  job_titles: string | null,
+  profile_img: string | null
 };
+
+type ExperienceItem = {
+    title: string | null,
+    company: string | null,
+    end_date: string | null,
+    start_date: string  | null,
+    accomplishments: string[] | null,
+  };
+
+  type QueryObject = {
+    location?: string;
+    minYears?: number;
+    position?: string;
+  };
 
 interface userDetailsProps {
     onClose: () => void;
@@ -20,6 +35,14 @@ interface userDetailsProps {
 
 export default function UserDetails({onClose, selectedCandidate}: userDetailsProps) {
     const [isLoading, setIsLoading] = useState(false);
+    let parsedExperience: any[] = [];
+
+
+    if (selectedCandidate?.experience) {
+    parsedExperience = typeof selectedCandidate.experience === "string"
+        ? JSON.parse(selectedCandidate.experience)
+        : selectedCandidate.experience;
+    }
 
     return(
         <div className="">
@@ -43,7 +66,11 @@ export default function UserDetails({onClose, selectedCandidate}: userDetailsPro
                 
                     <div className="absolute top-4 left-2">
                         <button 
-                            className="text-black border rounded-xl p-1.5"
+                            className="rounded-md border border-slate-300 py-2 px-4 text-sm transition-all shadow-sm 
+                            text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 
+                            focus:text-white focus:bg-slate-800 focus:border-slate-800 
+                            active:text-white active:bg-slate-800 active:border-slate-800 
+                            disabled:opacity-50 h-8"
                             onClick={onClose}
                         >
                             Close
@@ -53,7 +80,7 @@ export default function UserDetails({onClose, selectedCandidate}: userDetailsPro
                         <div className="border border-gray-300 p-4 rounded-lg h-full">
                             <div className="flex items-center">
                                 <img 
-                                    src={"/profile.jpg"} 
+                                    src={selectedCandidate?.profile_img ?? undefined}
                                     alt="profile" 
                                     className="w-16 h-16 rounded-[50%] mr-4"
                                 />
@@ -62,7 +89,6 @@ export default function UserDetails({onClose, selectedCandidate}: userDetailsPro
                                         {selectedCandidate?.name}
                                     </h2>
                                 </div>
-                                
                             </div>
                             <div className="grid grid-cols-2 w-full">
                                 <table className="min-w-0 divide-y divide-gray-200">
@@ -106,7 +132,25 @@ export default function UserDetails({onClose, selectedCandidate}: userDetailsPro
                         </div>
                         <div className="border p-4 rounded-lg">
                             <h3 className="text-lg font-semibold mb-2">Experience</h3>
-                            <p className="text-gray-700">{selectedCandidate?.experience}</p>
+                            {/* <p className="text-gray-700">{selectedCandidate?.experience}</p> */}
+                            <div className="space-y-4">
+                            {Array.isArray(selectedCandidate?.experience) && selectedCandidate.experience.length > 0 ? (
+                                selectedCandidate.experience.map((job, index) => (
+                                    <div key={index} className="border-b pb-4">
+                                    <h3 className="text-lg font-semibold">{job.title}</h3>
+                                    <p className="text-sm text-gray-500">{job.company} | {job.start_date} - {job.end_date}</p>
+                                    <ul className="list-disc list-inside mt-2 text-gray-700">
+                                        {job.accomplishments?.map((point, i) => (
+                                        <li key={i}>{point}</li>
+                                        ))}
+                                    </ul>
+                                    </div>
+                                ))
+                                ) : (
+                                <p className="text-gray-500 italic">No experience data available.</p>
+                                )}
+                            </div>
+
                             
                             <h3 className="text-lg font-semibold mt-4 mb-2">Description</h3>
                             <p className="text-gray-700">{selectedCandidate?.description}</p>
