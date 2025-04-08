@@ -77,97 +77,64 @@ export default function UserDetails({onClose, selectedCandidate}: userDetailsPro
                         </button>
                     </div>
                     <div className="grid grid-rows-2 gap-4 text-black">
-                        <div className="border border-gray-300 p-4 rounded-lg h-full">
+                        <div className="p-4 rounded-lg shadow-md hover:bg-gray-50 h-auto">
                             <div className="flex items-center">
                                 <img 
                                     src={selectedCandidate?.profile_img ?? undefined}
                                     alt="profile" 
-                                    className="w-16 h-16 rounded-[50%] mr-4"
+                                    className="w-30 h-30 rounded-[30%] mr-4"
                                 />
                                 <div>
-                                    <h2 className="text-xl font-semibold">
+                                    <h1 className="text-2xl font-semibold">
                                         {selectedCandidate?.name}
-                                    </h2>
+                                    </h1>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 w-full">
-                                <table className="min-w-0 divide-y divide-gray-200">
-                                    <tbody className="divide-y divide-gray-200">
-                                        <tr>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                📍 Location:
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {selectedCandidate?.location}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                Years of Experience:
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {selectedCandidate?.years_of_experience}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                Experts in:
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-normal text-sm text-gray-500">
-                                                <div className="flex flex-wrap gap-2 mt-2">
-                                                    {typeof selectedCandidate?.keywords === 'string' && selectedCandidate?.keywords.split(',').map((skill, i) => (
-                                                        <span
-                                                            key={i}
-                                                            className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs"
-                                                        >
-                                                            {skill.trim()}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div className="grid grid-row-3 w-full mt-4">
+                                <div className="grid grid-cols-2 shadow-sm bg-neutral-50 rounded-2xl justify-center items-center p-1 mb-4">
+                                    <h3 className="text-lg font-semibold">📍 Location:</h3>
+                                    <p  className="border-l px-6 py-4 whitespace-nowrap text-sm text-gray-500">{selectedCandidate?.location}</p>
+                                </div>
+                                <div className="grid grid-cols-2 shadow-sm bg-neutral-50 rounded-2xl justify-center items-center p-1 mb-4">
+                                    <h3 className="text-lg font-semibold mb-2">Years of Experience:</h3>
+                                    <p  className="border-l px-6 py-4 whitespace-nowrap text-sm text-gray-500">{selectedCandidate?.years_of_experience}</p>
+                                </div>
+                                <div className="grid grid-cols-2 shadow-sm bg-neutral-50 rounded-2xl justify-center items-center p-1 mb-4">
+                                    <h3 className="text-lg font-semibold mb-2"> Experts in:</h3>
+                                    <p  className="border-l px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {typeof selectedCandidate?.keywords === 'string' && selectedCandidate?.keywords.split(',').map((skill, i) => (
+                                                <span
+                                                    key={i}
+                                                    className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs"
+                                                >
+                                                    {skill.trim()}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                        <div className="border p-4 rounded-lg">
+                        <div className="shadow-lg p-4 rounded-lg hover:bg-gray-50">
                             <h3 className="text-lg font-semibold mb-2">Experience</h3>
-                            {/* <p className="text-gray-700">{selectedCandidate?.experience}</p> */}
                             <div className="space-y-4">
-                            {Array.isArray(selectedCandidate?.experience) && selectedCandidate.experience.length > 0 ? (
-                                selectedCandidate.experience.map((job, index) => (
-                                    <div key={index} className="border-b pb-4">
-                                    <h3 className="text-lg font-semibold">{job.title}</h3>
-                                    <p className="text-sm text-gray-500">{job.company} | {job.start_date} - {job.end_date}</p>
-                                    <ul className="list-disc list-inside mt-2 text-gray-700">
-                                        {job.accomplishments?.map((point, i) => (
-                                        <li key={i}>{point}</li>
-                                        ))}
-                                    </ul>
-                                    </div>
-                                ))
-                                ) : (
-                                <p className="text-gray-500 italic">No experience data available.</p>
+                                {Array.isArray(selectedCandidate?.experience) && selectedCandidate.experience.length > 0 ? (
+                                    selectedCandidate.experience.map((job, index) => (
+                                        <div key={index} className="border-t pb-4">
+                                            <h3 className="text-lg font-semibold">{job.title}</h3>
+                                            <p className="text-sm text-gray-500">{job.company} | {job.start_date} - {job.end_date}</p>
+                                            <ul className="list-disc list-inside mt-2 text-gray-700">
+                                                {job.accomplishments?.map((point, i) => (
+                                                <li key={i}>{point}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    ))
+                                    ) : (
+                                    <p className="text-gray-500 italic">No experience data available.</p>
                                 )}
                             </div>
-
-                            
-                            <h3 className="text-lg font-semibold mt-4 mb-2">Description</h3>
-                            <p className="text-gray-700">{selectedCandidate?.description}</p>
-                            
-                            {selectedCandidate?.companies && (
-                                <>
-                                    <h3 className="text-lg font-semibold mt-4 mb-2">Companies</h3>
-                                    <p className="text-gray-700">{selectedCandidate.companies}</p>
-                                </>
-                            )}
-                            
-                            {selectedCandidate?.job_titles && (
-                                <>
-                                    <h3 className="text-lg font-semibold mt-4 mb-2">Job Titles</h3>
-                                    <p className="text-gray-700">{selectedCandidate.job_titles}</p>
-                                </>
-                            )}
                         </div>
                     </div>
                 </div>
