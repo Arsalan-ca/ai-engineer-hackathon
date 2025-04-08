@@ -5,29 +5,46 @@ import axios from "axios";
 
 interface FilterModalProps {
     onClose: () => void; 
+    onApplyFilters: (filteredCandidates: any[]) => void;
   }
 
-export default function FilterModal({onClose}: FilterModalProps) {
+export default function FilterModal({onClose, onApplyFilters}: FilterModalProps) {
     const [skills, setSkills] = useState('');
     const [companies, setCompanies] = useState('');
     const [jobTitles, setJobTitles] = useState('');
     const [location, setLocation] = useState('');
     const [yearsOfExperience, setYearsOfExperience] = useState('');
-    const [filterWords, setFilterWords] = useState('');
 
-    const buildString = () => {
-        const combinedString = `Skills: ${skills}, Companies: ${companies}, Job Titles: ${jobTitles}, Location: ${location}, Years of Experience: ${yearsOfExperience}`;
-        setFilterWords(combinedString);
+    const handleWordFilter = async () => {
+        const filters = {
+          keywords: skills || null,
+          companies: companies || null,
+          job_titles: jobTitles || null,
+          location: location || null,
+          years_of_experience: yearsOfExperience ? parseInt(yearsOfExperience) : null,
+        };
+      console.log("!!Filters:", filters);
+        try {
+          const response = await axios.post('/api/ai-search', {
+            searchQuery: "", 
+            filter_words: filters,
+          });
+          onApplyFilters(response.data.candidates);
+          onClose(); // Close the modal after applying filters
+      
+        } catch (error) {
+          console.error("Error filtering candidates:", error);
+        }
     };
 
-    const handleWordFilter = async (query: string) => {
-    
-        axios.get('/api/ai-search', {
-            params: {   filter_words: filterWords }
-        })
-        .then(response => console.log(response.data));
-    
+    const handleClearFilter = () => {
+        setSkills('');
+        setCompanies('');
+        setJobTitles('');
+        setLocation('');
+        setYearsOfExperience('');
     }
+      
 
     return(
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm w-full" onClick={onClose}>
@@ -43,7 +60,8 @@ export default function FilterModal({onClose}: FilterModalProps) {
                                     text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 
                                     focus:text-white focus:bg-slate-800 focus:border-slate-800 
                                     active:text-white active:bg-slate-800 active:border-slate-800 
-                                    disabled:opacity-50 h-8">
+                                    disabled:opacity-50 h-8"
+                            onClick={() => {handleClearFilter()}}>
                             Clear Filter
                         </button>
                         <button 
@@ -52,7 +70,7 @@ export default function FilterModal({onClose}: FilterModalProps) {
                                     focus:bg-white focus:text-slate-800 
                                     active:bg-white active:text-slate-800 
                                     disabled:opacity-50 h-8"
-                            onClick={buildString}>
+                            onClick={handleWordFilter}>
                             Search
                         </button>
                     </div>

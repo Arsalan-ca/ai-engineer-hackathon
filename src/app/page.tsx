@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import UserDetails from "./userDetails";
 import FilterModal from "./components/filterModal";
 import axios from "axios";
+import {supabase} from "../lib/supabase";
 
 type UserInfo = {
   id: string,
@@ -35,11 +36,29 @@ export default function Home() {
   const [isSelected, setIsSelected] = useState<UserInfo | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [textQuery, setTextQuery] = useState('');
+  const [candidateData, setCandidateData] = useState<UserInfo[]>([]);
+
 
   
   useEffect(() => {
     setIsLoading(true);
   }, []);
+
+  useEffect(() => {
+    async function fetchCandidate() {
+        const { data, error } = await supabase
+            .from('candidates')
+            .select('*')
+        
+        if(error){
+            throw new Error('Error fetching candidates', error)
+        }
+        if(data){
+            setCandidateData(data as UserInfo[]); 
+        }
+    }
+    fetchCandidate();
+}, []); 
   
   const handleProfileClick = (candidate: UserInfo) => {
     setIsSelected(candidate)
@@ -59,19 +78,21 @@ export default function Home() {
     }
 
     try {
-      const response = await axios.get('/api/ai-search', {
-        params: { searchQuery: query },
+      const response = await axios.post('/api/ai-search', {
+        searchQuery: query,
       })
 
       console.log("!! Response:", response.data);
-
+      setCandidateData(response.data.candidates)
 
     } catch (error) {
       console.error("Error fetching candidates:", error);
     }
+  }
 
-}
-
+  const applyFilters = (filteredCandidates: UserInfo[]) => {
+    setCandidateData(filteredCandidates);
+  };
 
   return (
     <div className="flex-1 h-screen w-screen bg-white items-center justify-items-center">
@@ -108,10 +129,12 @@ export default function Home() {
             ) : (
             <div className="w-full">
               {isModalOpen && (
-                  <FilterModal onClose={() => setIsModalOpen(false)}/>
+                  <FilterModal onClose={() => setIsModalOpen(false)}
+                    onApplyFilters={applyFilters}/>
               )}
               <UserInformation 
-                onOpen={handleProfileClick}/>
+                onOpen={handleProfileClick}
+                candidateData={candidateData}/>
               <div className={`fixed top-0 right-0 w-4/6 h-full z-10 transition-transform duration-300 ${isOpen ? 'transform translate-x-0' : 'transform translate-x-full'}`}>
                 <UserDetails 
                   onClose={handleCloseClick}

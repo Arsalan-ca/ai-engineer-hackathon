@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from '@supabase/supabase-js';
-import {supabase} from "../lib/supabase";
+
 
 interface UserInfoProps {
     onOpen: (candidate: UserInfo) => void;
+    candidateData: UserInfo[];
 }
 
 type UserInfo = {
@@ -32,26 +33,7 @@ type ExperienceItem = {
   };
 
 
-export default function UserInformation({onOpen}: UserInfoProps) {
-    const [candidateData, setCandidateData] = useState<UserInfo[]>([]);
-
-    useEffect(() => {
-        async function fetchCandidate() {
-            const { data, error } = await supabase
-                .from('candidates')
-                .select('*')
-            
-            if(error){
-                throw new Error('Error fetching candidates', error)
-            }
-            if(data){
-                setCandidateData(data as UserInfo[]); 
-            }
-        }
-        fetchCandidate();
-    }, []); 
-
-
+export default function UserInformation({onOpen, candidateData}: UserInfoProps) {
 
     return (
     <div className="bg-white p-6 text-black">
